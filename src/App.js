@@ -2,78 +2,87 @@ import './App.css';
 import { useState } from "react"; 
 import axios from 'axios'
 
+
 function App() {
 
   const [pokemonName, setPokemonName] = useState("");
-  const [pokemon, setPokemon] = useState({
-    name: "", 
-    species: "", 
-    img: "", 
-    hp: "",
-    attack: "",
-    defense: "",
-    type: "",
-  })
+  const [indexerRes, setIndexderRes] = useState([]);
+  var data = require("./data.json");
+  // get the json data 
 
-  const [pokemonChosen, setPokemonChosen] = useState(false);
+  function searchPokemon(){
+    //Indexer
+    axios.get(`https://pokeapi.co/api/v2/pokemon`).then((indexer) => {
+      
+      // globalResult = Res;
+      // var docList = [];
+      // for (let i = 0; i < Res.length; i++){
+      //   docList[i] = Res[i].name
+      // }
+      // console.log(indexer.data.results.name);
+      // console.log(indexer)
+      setIndexderRes(
+        indexer.data.results
+      );
+      // console.log(indexer);
+      
 
-  const searchPokemon = () =>{
-    axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`).then((Response) => {
-      setPokemon({
-        name: pokemonName, 
-        species: Response.data.species.name, 
-        img: Response.data.sprites.front_default, 
-        hp: Response.data.stats[0].base_stat,
-        attack: Response.data.stats[1].base_stat,
-        defense: Response.data.stats[2].base_stat,
-        type: Response.data.types[0].type.name,
-      });
-      setPokemonChosen(true);
-
+      // console.log(Res);
+      
+    })
     }
-    );
-  };
 
+  function showResults(){
+    // console.log(Res);
+    // console.log(pokemonRes);
+  }
+      
 
-
-
+      // pageRank
+    // axios.get(`https://pokeapi.co/api/v2/pokemon`).then((pagerank) => {
+    //   var PRRes = pagerank.data.results;
+    //   for (let i = 0; i < PRRes.length; i++){
+    //     // Res[i].score = ....
+    //   }
+    
+    // Res.sort(function(a, b) {
+    //     return a.score - b.score;
+    // }); 
+    
+    // })
 
   return (
     <div className = "App">
       <div className="TitleSection">
-        <h1>Pokemon Stats</h1> 
+        <h1>Search it !</h1> 
         <input 
           type = "text" 
           onChange = {(event) => {
             setPokemonName(event.target.value);
         }}
         />
-        <button onClick = {searchPokemon}>
-          Search Pokemon
+        <button onClick = {() =>{
+          searchPokemon();
+        }
+        }>
+        Search!
         </button>
+        <div>{console.log(indexerRes)}</div>
+        <div className = "DisplaySection">
+          {indexerRes.map((loc) => (
+                <div className = "res">
+                <div key={loc.name} style = {{color: "#85144b"}}>{loc.name}</div>
+                <div className = "url"><a href={loc.url} style = {{color: "#0074D9"}}>{loc.url}</a></div>
+                {/* <Link to={`/${loc}`} onClick={(anchor) => updateCity(anchor)}>{loc}</Link> */}
+                </div>
+              ))}
+        </div>
       </div>
-      <div className = "DisplaySection">
-        {!pokemonChosen ? 
-        (<h1> please choose a Pokemon</h1>)
-        :
-        (
-        <>
-          <h1>{pokemon.name}</h1>
-          <img src ={pokemon.img} />
-          <h3>Species: {pokemon.species}</h3>
-          <h3>Type: {pokemon.type}</h3>
-          <h4>Hp: {pokemon.hp}</h4>
-          <h4>Attack: {pokemon.attack}</h4>
-          <h4>Defense: {pokemon.defense}</h4>
-        </>
-        )
 
-      }
-
-      </div>
     </div>
     
   );
 }
+  
 
 export default App;

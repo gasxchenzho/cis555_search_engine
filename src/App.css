@@ -13,20 +13,20 @@
 
 
 .TitleSection{
-  background-color: #5DB9FF;
+  background-image: linear-gradient(#0c88e8,#9cbed8);
   width: 100%;
-  height: 300px;
+  height: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: white;
+  color: black;
 }
 
 
 
 .TitleSection input{
-  width: 200px;
-  height: 40px;
+  width: 400px;
+  height: 60px;
   border-radius: 10px;
   border: 1px solid #4ca8ee;
   font-size: 18px;
@@ -41,7 +41,6 @@
   border: none;
   background-color: #006cbf;
   font-size: 18px;
-  padding-left: 10px;
   color: white;
 }
 
@@ -52,17 +51,22 @@
 
 
 .DisplaySection{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* display: flex; */
+  width: 100%;
+  background-image: linear-gradient(#ffafbd,#e9dbd2);
+  margin: 38px;
+  font-size:20px;
 }
 
-.DisplaySection h4,h3 {
-  margin: 5px;
-
+.res{
+  /* display: flex; */
+  font-family: 'Fuzzy Bubbles', cursive;
+  grid-row: 1;
+  margin: 30px;
+  padding-left: 30px;
 }
 
-
-.DisplaySection img{
-  width: 200px;
+.url{
+  color: white;
 }
+

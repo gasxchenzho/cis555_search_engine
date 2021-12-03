@@ -1,0 +1,23 @@
+[ 
+    {
+        "id":"doc4id",
+        "tf":0.25,
+        "tf_idf":0.11928,
+        "whetherInTitle": false,
+        "whetherInURL": false,
+        "url": "http://192.168.xx.x/doc4",
+        "title": "title of doc4",
+        "content": ["content of orange part in doc4..."]
+    },
+         {
+            "id": "doc5id",
+            "tf":0.2,
+            "tf_idf" : 0,
+            "whetherInTitle": false,
+            "whetherInURL": false,
+            "url": "http://192.168.xx.x/doc5",
+            "title": "title of doc5",
+            "content": ["content of orange part in doc5...", "content of orange in doc5 at a different place."]
+    }
+    
+]
