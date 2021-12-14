@@ -16,7 +16,7 @@ function App() {
   function searchPokemon(){
     
     //Indexer
-    axios.get(`http://localhost:8080/search/${pokemonName}`).then((indexer) => {
+    axios.get(`http://ec2-107-23-251-43.compute-1.amazonaws.com:8080/search/${pokemonName}`).then((indexer) => {
       
       
 
