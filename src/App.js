@@ -9,13 +9,14 @@ function App() {
 
   const [pokemonName, setPokemonName] = useState("");
   const [indexerRes, setIndexderRes] = useState([]);
+  const [word,setWord] = useState([]);
   
   // get the json data 
 
   function searchPokemon(){
     
     //Indexer
-    axios.get(`http://ec2-107-23-251-43.compute-1.amazonaws.com:4567/hello/${pokemonName}`).then((indexer) => {
+    axios.get(`http://localhost:8080/search/${pokemonName}`).then((indexer) => {
       
       
 
@@ -27,25 +28,32 @@ function App() {
         indexer.data
       )
 
-      indexerRes.sort((a,b) => (a.tf_idf   < b.tf_idf ) ? 1 : -1 )
-      console.log(indexerRes)
+      
+      console.log(indexer)
       
     })
     }
 
-  // function getHighlightedText(text, highlight) {
-  //     // Split on highlight term and include term into parts, ignore case
-  //     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-  //     return <span> { parts.map((part, i) => 
-  //         <span key={i} style={part.toLowerCase() === highlight.toLowerCase() ? { fontWeight: 'bold',fontSize: 25 } : {} }>
-  //             { part }
-  //         </span>)
-  //     } </span>;
-  // }  
+  function getHighlightedText(text, highlight) {
+      // Split on highlight term and include term into parts, ignore case
+      const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+      
+      return <span> { parts.map((part, i) => 
+        
+          <span key={i} style={part.toLowerCase() === highlight.toLowerCase() ? { fontWeight: 'bold',fontSize: 25 } : {} }>
+              { part }
+          </span>)
+      } 
+      </span>;
+  }  
 
-
-
-
+  
+  function toHighlight(content){
+    for(var i =0; i< word.length; i++){
+      getHighlightedText(content,word[i])
+    }
+  }
+  
   
 
   return (
@@ -57,11 +65,15 @@ function App() {
 
           onChange = {(event) => {
             setPokemonName(event.target.value);
+            
           
         }}
         />
         <button onClick = {() =>{
           if(pokemonName != ""){
+          setWord(
+            pokemonName.split(" ")
+          )
           searchPokemon();
           }else{
             setIndexderRes([]);
@@ -74,9 +86,9 @@ function App() {
           {indexerRes.map((loc) => (
                 <div className = "res">
                 <div key={loc.url} style = {{color: "#85144b"}}>{loc.url}</div>
-                <div className = "url"><a href={loc.url} style = {{color: "#0074D9"}}>{loc.title}</a></div>
-                <div key = {loc.nearby_contents} style = {{color: "#85144b"}}>
-                  {loc.nearby_contents}
+                <div className = "url"><a href={loc.url} style = {{color: "#0074D9"}} target="_blank">{loc.title}</a></div>
+                <div key = {loc.nearby_content} style = {{color: "#85144b"}}>
+                  {word.map(inputword =>(getHighlightedText(loc.nearby_content,inputword)))}
                 </div>
                 </div>
               ))}
