@@ -7,39 +7,40 @@ import Highlighter from "react-highlight-words";
 
 function App() {
 
-  const [pokemonName, setPokemonName] = useState("");
+  const [wordToSearch, setwordToSearch] = useState("");
   const [indexerRes, setIndexderRes] = useState([]);
-  const [word,setWord] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("result not found");
+  const [splitWord, setSplitWord] = useState([]);
+  
   
   // get the json data 
 
-  function searchPokemon(){
-    
+  function searchword(){
     //Indexer
-    axios.get(`http://ec2-107-23-251-43.compute-1.amazonaws.com:8080/search/${pokemonName}`).then((indexer) => {
+    axios.get(`http://184.72.110.242:8080/search/${wordToSearch}`).then((response) => {
       
-      
-
-
-
-
-
       setIndexderRes(
-        indexer.data
+        response.data
       )
-
-      
-      console.log(indexer)
-      
+      // setSplitWord(
+      //   splitWord.split(",")
+      // )
+      console.log(indexerRes)
     })
+    .catch(function (error){
+      if (error.response){
+        setIndexderRes(
+          []
+        )
+        console.log(indexerRes)
+      }
+    });
     }
 
   function getHighlightedText(text, highlight) {
       // Split on highlight term and include term into parts, ignore case
-      const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-      
+      const parts = text.split(new RegExp(`(${highlight})`, 'gi'));   
       return <span> { parts.map((part, i) => 
-        
           <span key={i} style={part.toLowerCase() === highlight.toLowerCase() ? { fontWeight: 'bold',fontSize: 25 } : {} }>
               { part }
           </span>)
@@ -47,14 +48,31 @@ function App() {
       </span>;
   }  
 
-  
-  function toHighlight(content){
-    for(var i =0; i< word.length; i++){
-      getHighlightedText(content,word[i])
+  function renderContent() {
+    if (indexerRes.length !== 0) {
+      return <div className = "DisplaySection">
+          
+      {indexerRes.map((loc) => (
+            <div className = "res">
+            <div key={loc.url} style = {{color: "#85144b"}}>{loc.url}</div>
+            <div className = "url"><a href={loc.url} style = {{color: "#0074D9"}} target="_blank">{loc.title}</a></div>
+            <div key = {loc.nearby_content} style = {{color: "#85144b"}}>
+              {getHighlightedText(loc.nearby_content,loc.highlight_words)}
+            </div>
+            </div>
+          ))}
+    </div> // pass states as props down to child
     }
-  }
+    else{
+      console.log("error input")
+      return <div className='Noresult'>Please enter a valid word</div>
+    }
+    
+}
+
+    
   
-  
+
 
   return (
     <div className = "App">
@@ -62,43 +80,56 @@ function App() {
         <h1>Search it !</h1> 
         <input 
           type = "text" 
-
           onChange = {(event) => {
-            setPokemonName(event.target.value);
-            
-          
-        }}
+            setwordToSearch(event.target.value);         
+          }}
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              searchword()
+              // console.log(indexerRes)
+            }
+          }}    
         />
-        <button onClick = {() =>{
-          if(pokemonName != ""){
-          setWord(
-            pokemonName.split(" ")
-          )
-          searchPokemon();
+        <button 
+        onClick = {() =>{
+          if(wordToSearch != ""){
+          
+          // const start = new Date();
+          searchword();
+          // const timeTaken = (new Date()) - start;
+          // console.log(timeTaken);
           }else{
             setIndexderRes([]);
           }
         }
         }>
+
         Search!
         </button>
-        <div className = "DisplaySection">
+        
+        {/* <div className = "DisplaySection">
+          
           {indexerRes.map((loc) => (
                 <div className = "res">
                 <div key={loc.url} style = {{color: "#85144b"}}>{loc.url}</div>
                 <div className = "url"><a href={loc.url} style = {{color: "#0074D9"}} target="_blank">{loc.title}</a></div>
                 <div key = {loc.nearby_content} style = {{color: "#85144b"}}>
-                  {word.map(inputword =>(getHighlightedText(loc.nearby_content,inputword)))}
+                  {getHighlightedText(loc.nearby_content,loc.highlight_words)}
                 </div>
                 </div>
               ))}
-        </div>
+        </div> */}
+        {renderContent()}
+        
       </div>
 
     </div>
     
   );
-}
+          }
+  
+          
+        
   
 
 export default App;
