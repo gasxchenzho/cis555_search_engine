@@ -16,7 +16,7 @@ function App() {
   function searchPokemon(){
     
     //Indexer
-    axios.get(`http://ec2-107-23-251-43.compute-1.amazonaws.com:8080/search/${pokemonName}`).then((indexer) => {
+    axios.get(`http://184.72.110.242:8080/search/${pokemonName}`).then((indexer) => {
       
       
 
@@ -29,7 +29,7 @@ function App() {
       )
 
       
-      console.log(indexer)
+      // console.log(indexer.data)
       
     })
     }
@@ -48,11 +48,7 @@ function App() {
   }  
 
   
-  function toHighlight(content){
-    for(var i =0; i< word.length; i++){
-      getHighlightedText(content,word[i])
-    }
-  }
+ 
   
   
 
@@ -71,9 +67,7 @@ function App() {
         />
         <button onClick = {() =>{
           if(pokemonName != ""){
-          setWord(
-            pokemonName.split(" ")
-          )
+          
           searchPokemon();
           }else{
             setIndexderRes([]);
@@ -88,7 +82,8 @@ function App() {
                 <div key={loc.url} style = {{color: "#85144b"}}>{loc.url}</div>
                 <div className = "url"><a href={loc.url} style = {{color: "#0074D9"}} target="_blank">{loc.title}</a></div>
                 <div key = {loc.nearby_content} style = {{color: "#85144b"}}>
-                  {word.map(inputword =>(getHighlightedText(loc.nearby_content,inputword)))}
+                  {getHighlightedText(loc.nearby_content,loc.highlight_words)}
+                  
                 </div>
                 </div>
               ))}
